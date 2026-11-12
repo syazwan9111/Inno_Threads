@@ -1,4 +1,3 @@
-index.html:
 <!DOCTYPE html>
 <html lang="ms">
 <head>
@@ -10,32 +9,19 @@ index.html:
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --mist: 
-#E8ECEF;
-  --panel: 
-#FBFCFD;
-  --ink: 
-#14222E;
-  --steel: 
-#586876;
-  --line: 
-#CCD5DC;
-  --cable: 
-#1D5FD1;
-  --cable-deep: 
-#154AA6;
-  --amber: 
-#E39A0B;
-  --green: 
-#17966A;
-  --red: 
-#C5362C;
-  --chassis: 
-#1B2A36;
-  --chassis-line: 
-#32475A;
-  --port: 
-#0E1820;
+  --mist: #E8ECEF;
+  --panel: #FBFCFD;
+  --ink: #14222E;
+  --steel: #586876;
+  --line: #CCD5DC;
+  --cable: #1D5FD1;
+  --cable-deep: #154AA6;
+  --amber: #E39A0B;
+  --green: #17966A;
+  --red: #C5362C;
+  --chassis: #1B2A36;
+  --chassis-line: #32475A;
+  --port: #0E1820;
   --display: "Bricolage Grotesque", "Instrument Sans", system-ui, sans-serif;
   --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -75,51 +61,37 @@ button { cursor: pointer; }
 .btn.primary { background: var(--cable); border-color: var(--cable); color: #fff; font-weight: 600; }
 .btn.primary:hover { background: var(--cable-deep); border-color: var(--cable-deep); }
 .btn.quiet { border-color: transparent; background: transparent; padding: 6px 8px; color: var(--cable-deep); }
-.btn.quiet:hover { background: 
-#DCE6F7; }
+.btn.quiet:hover { background: #DCE6F7; }
 .btn.danger { color: var(--red); }
-.btn.danger:hover { background: 
-#F7E1DF; }
+.btn.danger:hover { background: #F7E1DF; }
 .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
 
 .notice {
-  background: 
-#FBF1DC; border: 1px solid 
-#EBCB85; border-radius: 8px;
+  background: #FBF1DC; border: 1px solid #EBCB85; border-radius: 8px;
   padding: 10px 14px; font-size: 0.9375rem; margin-bottom: 16px;
   display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;
 }
 
 /* Panel suis: 7 hari x 3 slot */
 .chassis {
-  background: var(--chassis); color: 
-#DCE5EC; border-radius: 14px;
+  background: var(--chassis); color: #DCE5EC; border-radius: 14px;
   padding: 18px 18px 16px; position: relative;
-  box-shadow: inset 0 1px 0 
-#3A5063, 0 1px 0 #fff;
+  box-shadow: inset 0 1px 0 #3A5063, 0 1px 0 #fff;
 }
 .chassis-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
 .chassis-head h2 { font-family: var(--display); font-weight: 500; font-size: 1.125rem; margin: 0; letter-spacing: -0.01em; }
-.legend { display: flex; gap: 14px; font-size: 0.8125rem; color: 
-#A9B8C4; flex-wrap: wrap; }
+.legend { display: flex; gap: 14px; font-size: 0.8125rem; color: #A9B8C4; flex-wrap: wrap; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
-.led { width: 8px; height: 8px; border-radius: 50%; background: 
-#3B4D5C; flex: none; }
+.led { width: 8px; height: 8px; border-radius: 50%; background: #3B4D5C; flex: none; }
 .led.scheduled { background: var(--amber); box-shadow: 0 0 6px #E39A0B99; }
-.led.published { background: 
-#2FCB91; box-shadow: 0 0 6px #2FCB9199; }
-.led.failed { background: 
-#F0574B; box-shadow: 0 0 6px #F0574B99; }
+.led.published { background: #2FCB91; box-shadow: 0 0 6px #2FCB9199; }
+.led.failed { background: #F0574B; box-shadow: 0 0 6px #F0574B99; }
 
 .rack { display: grid; grid-template-columns: 52px repeat(7, minmax(0, 1fr)); gap: 6px 8px; align-items: center; }
-.rack .day { text-align: center; font-size: 0.8125rem; color: 
-#A9B8C4; line-height: 1.25; padding-bottom: 2px; }
-.rack .day b { display: block; font-family: var(--display); font-weight: 700; font-size: 1.0625rem; color: 
-#F1F5F8; }
-.rack .day.today b { color: 
-#7FB0FF; }
-.rack .slot-label { font-size: 0.8125rem; color: 
-#A9B8C4; font-variant-numeric: tabular-nums; }
+.rack .day { text-align: center; font-size: 0.8125rem; color: #A9B8C4; line-height: 1.25; padding-bottom: 2px; }
+.rack .day b { display: block; font-family: var(--display); font-weight: 700; font-size: 1.0625rem; color: #F1F5F8; }
+.rack .day.today b { color: #7FB0FF; }
+.rack .slot-label { font-size: 0.8125rem; color: #A9B8C4; font-variant-numeric: tabular-nums; }
 .port {
   height: 46px; border-radius: 6px; border: 1px solid var(--chassis-line);
   background: var(--port); position: relative; padding: 0; width: 100%;
@@ -131,15 +103,11 @@ button { cursor: pointer; }
   border-radius: 0 0 3px 3px;
 }
 .port .led { margin-bottom: 8px; }
-.port:hover { border-color: 
-#7FB0FF; }
-.port.picked { border-color: 
-#7FB0FF; box-shadow: 0 0 0 2px #7FB0FF55; }
+.port:hover { border-color: #7FB0FF; }
+.port.picked { border-color: #7FB0FF; box-shadow: 0 0 0 2px #7FB0FF55; }
 .port.past { opacity: 0.45; }
-.port .count { position: absolute; top: 9px; right: 5px; font-size: 0.6875rem; color: 
-#F0C36A; font-weight: 600; }
-.chassis-foot { margin-top: 12px; font-size: 0.8125rem; color: 
-#A9B8C4; }
+.port .count { position: absolute; top: 9px; right: 5px; font-size: 0.6875rem; color: #F0C36A; font-weight: 600; }
+.chassis-foot { margin-top: 12px; font-size: 0.8125rem; color: #A9B8C4; }
 
 /* Dua lajur */
 .work { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px; margin-top: 20px; align-items: start; }
@@ -167,8 +135,7 @@ input[type="date"], input[type="time"], input[type="text"], input[type="password
 .chip-time { display: inline-flex; align-items: center; gap: 6px; }
 .chip-time input { width: 118px; padding: 6px 8px; border-radius: 999px; }
 .hint { font-size: 0.8125rem; color: var(--steel); margin: 8px 0 0; }
-.hint.warn { color: 
-#8A5A00; }
+.hint.warn { color: #8A5A00; }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
 
 /* Senarai */
@@ -184,8 +151,7 @@ input[type="date"], input[type="time"], input[type="text"], input[type="password
 .post p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.9375rem; }
 .post p.clamp { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .post .err { color: var(--red); font-size: 0.875rem; margin-top: 6px; }
-.research { margin: 10px 0 0; padding: 8px 12px; background: 
-#EEF2F6; border-radius: 8px; font-size: 0.875rem; display: grid; gap: 4px; }
+.research { margin: 10px 0 0; padding: 8px 12px; background: #EEF2F6; border-radius: 8px; font-size: 0.875rem; display: grid; gap: 4px; }
 .research div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 8px; }
 .research dt { color: var(--steel); }
 .research dd { margin: 0; overflow-wrap: anywhere; }
@@ -357,19 +323,19 @@ dialog::backdrop { background: #14222E99; }
   function parts(ms) {
     const d = new Date(ms + MYT);
     return {
-      date: ${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())},
-      time: ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())},
+      date: `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`,
+      time: `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`,
       dow: d.getUTCDay(), day: d.getUTCDate(), month: d.getUTCMonth(),
     };
   }
-  const iso = (date, time) => ${date}T${time}:00+08:00;
+  const iso = (date, time) => `${date}T${time}:00+08:00`;
   const today = () => parts(Date.now()).date;
   function addDays(date, n) { return parts(Date.parse(iso(date, '12:00')) + n * 86400000).date; }
   function niceDate(date) {
     const p = parts(Date.parse(iso(date, '12:00')));
     if (date === today()) return 'Hari ini';
     if (date === addDays(today(), 1)) return 'Esok';
-    return ${DAYS[p.dow]}, ${p.day} ${MONTHS[p.month]};
+    return `${DAYS[p.dow]}, ${p.day} ${MONTHS[p.month]}`;
   }
 
   // ---------- Simpanan tempatan (boleh gagal dalam pratonton) ----------
@@ -414,30 +380,34 @@ dialog::backdrop { background: #14222E99; }
 
   async function gh(path, opts = {}) {
     const c = state.cfg;
-    const res = await fetch(https://api.github.com/repos/${c.owner}/${c.repo}${path}, {
+    const res = await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}${path}`, {
       ...opts,
-      headers: { Accept: 'application/vnd.github+json', Authorization: Bearer ${c.token}, 'X-GitHub-Api-Version': '2022-11-28', ...(opts.headers || {}) },
+      headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${c.token}`, 'X-GitHub-Api-Version': '2022-11-28', ...(opts.headers || {}) },
       cache: 'no-store',
     });
     if (res.status === 204) return null;
     const json = await res.json().catch(() => ({}));
     if (!res.ok) {
-      const e = new Error(explain(res.status, json.message));
+      const e = new Error(explain(res.status, json.message, path, opts.method) + (json.message ? ` (GitHub: ${json.message})` : ''));
       e.status = res.status;
       throw e;
     }
     return json;
   }
-  function explain(status, message) {
+  function explain(status, message, path, method) {
     if (status === 401) return 'Token GitHub tidak sah atau sudah luput. Masukkan token baharu dalam Tetapan.';
-    if (status === 403) return 'Token tidak mempunyai izin yang cukup. Ia perlukan Contents dan Actions: Read and write.';
+    if (status === 403) {
+      if (method === 'PUT' && (path || '').startsWith('/contents')) return 'Token tidak boleh menyimpan post ke repo. Tukar izin Contents kepada Read and write, kemudian cuba lagi.';
+      if ((path || '').startsWith('/actions')) return 'Post sudah disimpan, tetapi token tidak boleh menjalankan workflow. Tukar izin Actions kepada Read and write.';
+      return 'Token tidak mempunyai izin yang cukup. Ia perlukan Contents dan Actions: Read and write.';
+    }
     if (status === 404) return 'Repo atau fail giliran tidak dijumpai. Semak nama pemilik dan repo dalam Tetapan.';
-    return message || GitHub membalas ralat ${status}.;
+    return message || `GitHub membalas ralat ${status}.`;
   }
 
   async function loadQueue() {
     const c = state.cfg;
-    const f = await gh(/contents/${QUEUE_PATH}?ref=${encodeURIComponent(c.branch)});
+    const f = await gh(`/contents/${QUEUE_PATH}?ref=${encodeURIComponent(c.branch)}`);
     const data = JSON.parse(b64decode(f.content));
     state.sha = f.sha;
     state.raw = data;
@@ -453,7 +423,7 @@ dialog::backdrop { background: #14222E99; }
       change(state.posts);
       const body = { ...state.raw, posts: state.posts, updated_at: new Date().toISOString() };
       try {
-        const out = await gh(/contents/${QUEUE_PATH}, {
+        const out = await gh(`/contents/${QUEUE_PATH}`, {
           method: 'PUT',
           body: JSON.stringify({ message, content: b64encode(JSON.stringify(body, null, 2) + '\n'), sha: state.sha, branch: state.cfg.branch }),
         });
@@ -469,7 +439,7 @@ dialog::backdrop { background: #14222E99; }
 
   async function loadLastRun() {
     try {
-      const r = await gh(/actions/workflows/${WORKFLOW}/runs?per_page=1);
+      const r = await gh(`/actions/workflows/${WORKFLOW}/runs?per_page=1`);
       state.lastRun = r.workflow_runs && r.workflow_runs[0] ? r.workflow_runs[0] : null;
     } catch { state.lastRun = null; }
   }
@@ -499,27 +469,27 @@ dialog::backdrop { background: #14222E99; }
     const dates = Array.from({ length: 7 }, (_, i) => addDays(t, i));
     for (const d of dates) {
       const p = parts(Date.parse(iso(d, '12:00')));
-      html += <div class="day${d === t ? ' today' : ''}">${d === t ? 'Hari ini' : DAYS[p.dow]}<b>${p.day}</b></div>;
+      html += `<div class="day${d === t ? ' today' : ''}">${d === t ? 'Hari ini' : DAYS[p.dow]}<b>${p.day}</b></div>`;
     }
     for (const s of SLOTS) {
-      html += <div class="slot-label">${s}</div>;
+      html += `<div class="slot-label">${s}</div>`;
       for (const d of dates) {
         const ps = slotPosts(d, s); const st = worst(ps);
         const past = Date.parse(iso(d, s)) < now;
         const picked = state.date === d && state.time === s;
         const word = st === 'scheduled' ? 'dijadualkan' : st === 'published' ? 'diterbitkan' : st === 'failed' ? 'gagal' : 'kosong';
-        html += <button class="port${past ? ' past' : ''}${picked ? ' picked' : ''}" data-date="${d}" data-time="${s}" aria-label="${esc(niceDate(d))} ${s}, ${word}"${picked ? ' aria-current="true"' : ''}> +
-          (ps.length > 1 ? <span class="count">${ps.length}</span> : '') + <i class="led ${st}"></i></button>;
+        html += `<button class="port${past ? ' past' : ''}${picked ? ' picked' : ''}" data-date="${d}" data-time="${s}" aria-label="${esc(niceDate(d))} ${s}, ${word}"${picked ? ' aria-current="true"' : ''}>` +
+          (ps.length > 1 ? `<span class="count">${ps.length}</span>` : '') + `<i class="led ${st}"></i></button>`;
       }
     }
     $('rack').innerHTML = html;
 
     const upcoming = state.posts.filter((p) => p.status === 'scheduled' && Date.parse(p.publish_at) >= now).sort((a, b) => Date.parse(a.publish_at) - Date.parse(b.publish_at))[0];
-    let foot = upcoming ? Post seterusnya: ${niceDate(parts(Date.parse(upcoming.publish_at)).date).toLowerCase()}, ${parts(Date.parse(upcoming.publish_at)).time}. : 'Tiada post dijadualkan. Tekan mana-mana port untuk pilih slot.';
+    let foot = upcoming ? `Post seterusnya: ${niceDate(parts(Date.parse(upcoming.publish_at)).date).toLowerCase()}, ${parts(Date.parse(upcoming.publish_at)).time}.` : 'Tiada post dijadualkan. Tekan mana-mana port untuk pilih slot.';
     if (state.lastRun) {
       const r = state.lastRun; const p = parts(Date.parse(r.updated_at || r.created_at));
       const ok = r.conclusion === 'success' ? 'berjaya' : r.status !== 'completed' ? 'sedang berjalan' : 'ada ralat';
-      foot +=  Semakan terakhir: ${niceDate(p.date).toLowerCase()} ${p.time}, ${ok}.;
+      foot += ` Semakan terakhir: ${niceDate(p.date).toLowerCase()} ${p.time}, ${ok}.`;
     }
     $('rackFoot').textContent = foot;
   }
@@ -543,7 +513,7 @@ dialog::backdrop { background: #14222E99; }
         published: ['Belum ada post diterbitkan', 'Post yang sudah keluar di Threads akan disenaraikan di sini.'],
         failed: ['Tiada post yang gagal', 'Jika ada post tidak dapat diterbitkan, sebabnya akan ditunjukkan di sini.'],
       }[state.tab];
-      $('list').innerHTML = <div class="empty"><b>${empties[0]}</b>${empties[1]}</div>;
+      $('list').innerHTML = `<div class="empty"><b>${empties[0]}</b>${empties[1]}</div>`;
       return;
     }
     $('list').innerHTML = items.map((p) => {
@@ -551,24 +521,23 @@ dialog::backdrop { background: #14222E99; }
       const by = p.created_by === 'claude' ? 'Ditulis oleh Claude' : 'Ditulis di papan ini';
       let row = '';
       if (p.status === 'scheduled') {
-        row = <button class="btn quiet" data-act="edit" data-id="${esc(p.id)}">Edit</button><button class="btn quiet danger" data-act="delete" data-id="${esc(p.id)}">Padam</button>;
+        row = `<button class="btn quiet" data-act="edit" data-id="${esc(p.id)}">Edit</button><button class="btn quiet danger" data-act="delete" data-id="${esc(p.id)}">Padam</button>`;
       } else if (p.status === 'published') {
-        row = p.permalink ? <a class="btn quiet" href="${esc(p.permalink)}" target="_blank" rel="noopener">Lihat di Threads</a> : '';
+        row = p.permalink ? `<a class="btn quiet" href="${esc(p.permalink)}" target="_blank" rel="noopener">Lihat di Threads</a>` : '';
       } else {
-        row = <button class="btn quiet" data-act="retry" data-id="${esc(p.id)}">Jadualkan semula</button><button class="btn quiet danger" data-act="delete" data-id="${esc(p.id)}">Padam</button>;
+        row = `<button class="btn quiet" data-act="retry" data-id="${esc(p.id)}">Jadualkan semula</button><button class="btn quiet danger" data-act="delete" data-id="${esc(p.id)}">Padam</button>`;
       }
-      const late = p.status === 'scheduled' && Date.parse(p.publish_at) < now ? '<div class="err" style="color:
-#8A5A00">Menunggu semakan seterusnya.</div>' : '';
+      const late = p.status === 'scheduled' && Date.parse(p.publish_at) < now ? '<div class="err" style="color:#8A5A00">Menunggu semakan seterusnya.</div>' : '';
       let research = '';
       const src = safeUrl(p.source_url);
       if (src || p.reason) {
         research = '<dl class="research">' +
-          (src ? <div><dt>Sumber</dt><dd><a href="${esc(src)}" target="_blank" rel="noopener">${esc(p.source_name || hostOf(src))}</a></dd></div> : '') +
-          (p.reason ? <div><dt>Sebab dipilih</dt><dd>${esc(p.reason)}</dd></div> : '') + '</dl>';
+          (src ? `<div><dt>Sumber</dt><dd><a href="${esc(src)}" target="_blank" rel="noopener">${esc(p.source_name || hostOf(src))}</a></dd></div>` : '') +
+          (p.reason ? `<div><dt>Sebab dipilih</dt><dd>${esc(p.reason)}</dd></div>` : '') + '</dl>';
       }
-      return <article class="post"><div class="t"><b>${when.time}</b><span>${esc(niceDate(when.date))}</span></div><div> +
-        <p class="clamp">${esc(p.text)}</p>${p.error ? <div class="err">${esc(p.error)}</div> : ''}${late}${research} +
-        <div class="row">${row}<span class="by">${by}</span></div></div></article>;
+      return `<article class="post"><div class="t"><b>${when.time}</b><span>${esc(niceDate(when.date))}</span></div><div>` +
+        `<p class="clamp">${esc(p.text)}</p>${p.error ? `<div class="err">${esc(p.error)}</div>` : ''}${late}${research}` +
+        `<div class="row">${row}<span class="by">${by}</span></div></div></article>`;
     }).join('') ;
   }
 
@@ -581,17 +550,17 @@ dialog::backdrop { background: #14222E99; }
     $('skippedCount').textContent = items.length;
     $('skippedList').innerHTML = items.map((s) => {
       const u = safeUrl(s.url);
-      const title = u ? <a href="${esc(u)}" target="_blank" rel="noopener">${esc(s.title)}</a> : esc(s.title);
-      return <li><b>${title}</b><span>${esc(s.reason || '')}</span><i>${esc(s.date ? niceDate(s.date) : '')}</i></li>;
+      const title = u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(s.title)}</a>` : esc(s.title);
+      return `<li><b>${title}</b><span>${esc(s.reason || '')}</span><i>${esc(s.date ? niceDate(s.date) : '')}</i></li>`;
     }).join('');
   }
 
   function renderComposer() {
     const len = [...$('text').value].length;
     const m = $('meter');
-    m.textContent = ${len} / ${LIMIT};
+    m.textContent = `${len} / ${LIMIT}`;
     m.className = len > LIMIT ? 'over' : '';
-    $('meterNote').textContent = len > LIMIT ? Buang ${len - LIMIT} aksara untuk muat dalam satu post. : 'Had Threads ialah 500 aksara.';
+    $('meterNote').textContent = len > LIMIT ? `Buang ${len - LIMIT} aksara untuk muat dalam satu post.` : 'Had Threads ialah 500 aksara.';
     $('date').value = state.date;
     $('date').min = today();
     document.querySelectorAll('.chip[data-time]').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.time === state.time)));
@@ -607,7 +576,7 @@ dialog::backdrop { background: #14222E99; }
       } else if (others.length) {
         hint.className = 'hint warn'; hint.textContent = 'Slot ini sudah ada post dijadualkan. Kedua-duanya akan keluar serentak.';
       } else {
-        hint.textContent = Akan diterbitkan ${niceDate(state.date).toLowerCase()} pada ${state.time}.;
+        hint.textContent = `Akan diterbitkan ${niceDate(state.date).toLowerCase()} pada ${state.time}.`;
       }
     }
     $('composeTitle').textContent = state.editing ? 'Edit post' : 'Tulis post';
@@ -621,7 +590,7 @@ dialog::backdrop { background: #14222E99; }
   function renderHeader() {
     $('demoNotice').hidden = !state.demo;
     $('linkDot').className = 'dot ' + (state.demo ? 'demo' : 'on');
-    $('linkText').textContent = state.demo ? 'Mod demo' : ${state.cfg.owner}/${state.cfg.repo};
+    $('linkText').textContent = state.demo ? 'Mod demo' : `${state.cfg.owner}/${state.cfg.repo}`;
   }
   function render() { renderHeader(); renderRack(); renderComposer(); renderList(); renderSkipped(); }
 
@@ -640,12 +609,12 @@ dialog::backdrop { background: #14222E99; }
     state.editing = null; $('text').value = '';
     const n = nextFreeSlot(); state.date = n.date; state.time = n.time;
   }
-  const newId = () => ${today()}-${Math.random().toString(36).slice(2, 8)};
+  const newId = () => `${today()}-${Math.random().toString(36).slice(2, 8)}`;
 
   function validText() {
     const text = $('text').value.trim();
     if (!text) { toast('Tulis teks post dahulu.', true); $('text').focus(); return null; }
-    if ([...text].length > LIMIT) { toast(Teks melebihi ${LIMIT} aksara., true); $('text').focus(); return null; }
+    if ([...text].length > LIMIT) { toast(`Teks melebihi ${LIMIT} aksara.`, true); $('text').focus(); return null; }
     return text;
   }
 
@@ -653,7 +622,11 @@ dialog::backdrop { background: #14222E99; }
     if (state.busy) return;
     state.busy = true; renderComposer();
     try { await fn(); if (done) toast(done); }
-    catch (e) { toast(e.message || 'Sesuatu tidak kena. Cuba lagi.', true); }
+    catch (e) {
+      toast(e.message || 'Sesuatu tidak kena. Cuba lagi.', true);
+      // Selaraskan semula dengan repo supaya post yang gagal disimpan tidak kekal dalam senarai.
+      if (!state.demo) { try { await loadQueue(); } catch {} }
+    }
     finally { state.busy = false; render(); }
   }
 
@@ -674,7 +647,7 @@ dialog::backdrop { background: #14222E99; }
         }
       }, id ? 'Edit post' : 'Jadualkan post');
       state.tab = 'scheduled'; resetComposer();
-    }, id ? 'Perubahan disimpan.' : Dijadualkan untuk ${niceDate(parts(Date.parse(at)).date).toLowerCase()}, ${parts(Date.parse(at)).time}.);
+    }, id ? 'Perubahan disimpan.' : `Dijadualkan untuk ${niceDate(parts(Date.parse(at)).date).toLowerCase()}, ${parts(Date.parse(at)).time}.`);
   }
 
   function askPublishNow() {
@@ -696,7 +669,7 @@ dialog::backdrop { background: #14222E99; }
         posts.push(post);
       }, 'Terbit sekarang');
       if (!state.demo) {
-        await gh(/actions/workflows/${WORKFLOW}/dispatches, { method: 'POST', body: JSON.stringify({ ref: state.cfg.branch }) });
+        await gh(`/actions/workflows/${WORKFLOW}/dispatches`, { method: 'POST', body: JSON.stringify({ ref: state.cfg.branch }) });
       }
       state.tab = state.demo ? 'published' : 'scheduled'; resetComposer();
     }, state.demo ? 'Ditanda sebagai diterbitkan (demo).' : 'Dihantar. Tekan Muat semula selepas seminit untuk lihat hasilnya.');
