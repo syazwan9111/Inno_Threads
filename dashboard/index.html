@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Papan Post Threads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --mist: #E8ECEF;
+  --panel: #FBFCFD;
+  --ink: #14222E;
+  --steel: #586876;
+  --line: #CCD5DC;
+  --cable: #1D5FD1;
+  --cable-deep: #154AA6;
+  --amber: #E39A0B;
+  --green: #17966A;
+  --red: #C5362C;
+  --chassis: #1B2A36;
+  --chassis-line: #32475A;
+  --port: #0E1820;
+  --display: "Bricolage Grotesque", "Instrument Sans", system-ui, sans-serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--mist);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--cable); outline-offset: 2px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px 64px; }
+
+/* Kepala */
+.top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 20px 0 16px; flex-wrap: wrap;
+}
+.brand { font-family: var(--display); font-weight: 700; font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1.1; }
+.brand small { display: block; font-family: var(--body); font-weight: 400; font-size: 0.875rem; letter-spacing: 0; color: var(--steel); margin-top: 4px; }
+.top-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.link-state { display: inline-flex; align-items: center; gap: 8px; font-size: 0.875rem; color: var(--steel); }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line); flex: none; }
+.dot.on { background: var(--green); }
+.dot.demo { background: var(--amber); }
+
+.btn {
+  border: 1px solid var(--line); background: var(--panel); border-radius: 8px;
+  padding: 9px 14px; font-weight: 500; font-size: 0.9375rem; line-height: 1.2;
+}
+.btn:hover { border-color: var(--steel); }
+.btn.primary { background: var(--cable); border-color: var(--cable); color: #fff; font-weight: 600; }
+.btn.primary:hover { background: var(--cable-deep); border-color: var(--cable-deep); }
+.btn.quiet { border-color: transparent; background: transparent; padding: 6px 8px; color: var(--cable-deep); }
+.btn.quiet:hover { background: #DCE6F7; }
+.btn.danger { color: var(--red); }
+.btn.danger:hover { background: #F7E1DF; }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+.notice {
+  background: #FBF1DC; border: 1px solid #EBCB85; border-radius: 8px;
+  padding: 10px 14px; font-size: 0.9375rem; margin-bottom: 16px;
+  display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+}
+
+/* Panel suis: 7 hari x 3 slot */
+.chassis {
+  background: var(--chassis); color: #DCE5EC; border-radius: 14px;
+  padding: 18px 18px 16px; position: relative;
+  box-shadow: inset 0 1px 0 #3A5063, 0 1px 0 #fff;
+}
+.chassis-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.chassis-head h2 { font-family: var(--display); font-weight: 500; font-size: 1.125rem; margin: 0; letter-spacing: -0.01em; }
+.legend { display: flex; gap: 14px; font-size: 0.8125rem; color: #A9B8C4; flex-wrap: wrap; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.led { width: 8px; height: 8px; border-radius: 50%; background: #3B4D5C; flex: none; }
+.led.scheduled { background: var(--amber); box-shadow: 0 0 6px #E39A0B99; }
+.led.published { background: #2FCB91; box-shadow: 0 0 6px #2FCB9199; }
+.led.failed { background: #F0574B; box-shadow: 0 0 6px #F0574B99; }
+
+.rack { display: grid; grid-template-columns: 52px repeat(7, minmax(0, 1fr)); gap: 6px 8px; align-items: center; }
+.rack .day { text-align: center; font-size: 0.8125rem; color: #A9B8C4; line-height: 1.25; padding-bottom: 2px; }
+.rack .day b { display: block; font-family: var(--display); font-weight: 700; font-size: 1.0625rem; color: #F1F5F8; }
+.rack .day.today b { color: #7FB0FF; }
+.rack .slot-label { font-size: 0.8125rem; color: #A9B8C4; font-variant-numeric: tabular-nums; }
+.port {
+  height: 46px; border-radius: 6px; border: 1px solid var(--chassis-line);
+  background: var(--port); position: relative; padding: 0; width: 100%;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.port::before { /* takuk RJ45 */
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 38%; height: 7px; background: var(--chassis); border: 1px solid var(--chassis-line); border-top: 0;
+  border-radius: 0 0 3px 3px;
+}
+.port .led { margin-bottom: 8px; }
+.port:hover { border-color: #7FB0FF; }
+.port.picked { border-color: #7FB0FF; box-shadow: 0 0 0 2px #7FB0FF55; }
+.port.past { opacity: 0.45; }
+.port .count { position: absolute; top: 9px; right: 5px; font-size: 0.6875rem; color: #F0C36A; font-weight: 600; }
+.chassis-foot { margin-top: 12px; font-size: 0.8125rem; color: #A9B8C4; }
+
+/* Dua lajur */
+.work { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px; margin-top: 20px; align-items: start; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.card h2 { font-family: var(--display); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.015em; margin: 0 0 12px; }
+
+textarea {
+  width: 100%; min-height: 190px; resize: vertical; border: 1px solid var(--line);
+  border-radius: 10px; padding: 12px; background: #fff; line-height: 1.5;
+}
+.meter { display: flex; justify-content: space-between; gap: 12px; font-size: 0.8125rem; color: var(--steel); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.meter .over { color: var(--red); font-weight: 600; }
+.field { margin-top: 14px; }
+.field > label, .field > .lab { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 6px; }
+input[type="date"], input[type="time"], input[type="text"], input[type="password"] {
+  border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: #fff; width: 100%;
+}
+.when { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 7px 14px;
+  font-variant-numeric: tabular-nums; font-weight: 500; font-size: 0.9375rem;
+}
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.chip-time { display: inline-flex; align-items: center; gap: 6px; }
+.chip-time input { width: 118px; padding: 6px 8px; border-radius: 999px; }
+.hint { font-size: 0.8125rem; color: var(--steel); margin: 8px 0 0; }
+.hint.warn { color: #8A5A00; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+/* Senarai */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: 0 -18px 4px; padding: 0 18px; }
+.tab { border: 0; background: none; padding: 8px 12px 10px; font-weight: 500; color: var(--steel); border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--cable); font-weight: 600; }
+.tab .n { font-variant-numeric: tabular-nums; color: var(--steel); font-weight: 400; margin-left: 4px; }
+.post { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.post:last-child { border-bottom: 0; padding-bottom: 0; }
+.post .t { font-variant-numeric: tabular-nums; line-height: 1.25; }
+.post .t b { font-family: var(--display); font-size: 1.25rem; font-weight: 700; display: block; }
+.post .t span { font-size: 0.8125rem; color: var(--steel); }
+.post p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.9375rem; }
+.post p.clamp { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.post .err { color: var(--red); font-size: 0.875rem; margin-top: 6px; }
+.post .row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; margin-left: -8px; align-items: center; }
+.post .by { font-size: 0.8125rem; color: var(--steel); margin-left: 8px; }
+.empty { padding: 28px 0 12px; color: var(--steel); }
+.empty b { display: block; color: var(--ink); font-family: var(--display); font-size: 1.0625rem; margin-bottom: 4px; }
+
+/* Dialog */
+dialog { border: 0; border-radius: 14px; padding: 0; width: min(480px, calc(100vw - 32px)); color: var(--ink); background: var(--panel); }
+dialog::backdrop { background: #14222E99; }
+.dlg { padding: 22px; }
+.dlg h2 { font-family: var(--display); font-size: 1.375rem; margin: 0 0 8px; letter-spacing: -0.015em; }
+.dlg p { margin: 0 0 12px; font-size: 0.9375rem; color: var(--steel); }
+.dlg ol { margin: 0 0 12px; padding-left: 20px; font-size: 0.9375rem; color: var(--steel); }
+.dlg .actions { justify-content: flex-end; }
+.dlg .preview { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.9375rem; max-height: 220px; overflow: auto; color: var(--ink); }
+
+.toast {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  background: var(--ink); color: #fff; padding: 11px 16px; border-radius: 10px; font-size: 0.9375rem;
+  max-width: calc(100vw - 32px); opacity: 0; pointer-events: none; transition: opacity .18s;
+}
+.toast.show { opacity: 1; }
+.toast.bad { background: var(--red); }
+
+@media (max-width: 860px) {
+  .work { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .rack { grid-template-columns: 40px repeat(7, minmax(0, 1fr)); gap: 5px 4px; }
+  .port { height: 38px; }
+  .rack .day { font-size: 0.6875rem; }
+  .rack .day b { font-size: 0.9375rem; }
+  .chassis { padding: 14px 12px; }
+  .post { grid-template-columns: 70px minmax(0, 1fr); gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Papan Post Threads<small id="account">@innocentrextech</small></div>
+    <div class="top-actions">
+      <span class="link-state"><span class="dot" id="linkDot"></span><span id="linkText">Belum disambung</span></span>
+      <button class="btn" id="refreshBtn">Muat semula</button>
+      <button class="btn" id="settingsBtn">Tetapan</button>
+    </div>
+  </header>
+
+  <div class="notice" id="demoNotice" hidden>
+    <span>Mod demo. Ini data contoh, dan tiada apa-apa yang diterbitkan. Sambungkan repo GitHub anda untuk mula menjadualkan post.</span>
+    <button class="btn" id="demoConnectBtn">Sambung repo</button>
+  </div>
+
+  <section class="chassis" aria-label="Slot post tujuh hari">
+    <div class="chassis-head">
+      <h2>Tujuh hari akan datang</h2>
+      <div class="legend">
+        <span><i class="led scheduled"></i>Dijadualkan</span>
+        <span><i class="led published"></i>Diterbitkan</span>
+        <span><i class="led failed"></i>Gagal</span>
+        <span><i class="led"></i>Kosong</span>
+      </div>
+    </div>
+    <div class="rack" id="rack"></div>
+    <div class="chassis-foot" id="rackFoot">Tekan mana-mana port untuk pilih slot itu.</div>
+  </section>
+
+  <div class="work">
+    <section class="card" aria-labelledby="composeTitle">
+      <h2 id="composeTitle">Tulis post</h2>
+      <label for="text" class="lab" style="position:absolute;left:-9999px">Teks post</label>
+      <textarea id="text" placeholder="Apa berita teknologi hari ini?"></textarea>
+      <div class="meter"><span id="meterNote">Had Threads ialah 500 aksara.</span><span id="meter">0 / 500</span></div>
+
+      <div class="field">
+        <span class="lab">Bila hendak diterbitkan (waktu Malaysia)</span>
+        <div class="when">
+          <input type="date" id="date" aria-label="Tarikh">
+          <div class="chips" id="chips">
+            <button type="button" class="chip" data-time="08:30" aria-pressed="false">08:30</button>
+            <button type="button" class="chip" data-time="13:00" aria-pressed="false">13:00</button>
+            <button type="button" class="chip" data-time="21:00" aria-pressed="false">21:00</button>
+            <span class="chip-time"><input type="time" id="customTime" step="1800" aria-label="Masa lain"></span>
+          </div>
+        </div>
+        <p class="hint" id="whenHint">Post disemak setiap 30 minit, jadi pilih masa pada jam tepat atau setengah jam.</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="scheduleBtn">Jadualkan post</button>
+        <button class="btn" id="nowBtn">Terbit sekarang</button>
+        <button class="btn quiet" id="cancelEditBtn" hidden>Batal</button>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Senarai post">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" data-tab="scheduled" aria-selected="true">Dijadualkan<span class="n" id="nScheduled">0</span></button>
+        <button class="tab" role="tab" data-tab="published" aria-selected="false">Diterbitkan<span class="n" id="nPublished">0</span></button>
+        <button class="tab" role="tab" data-tab="failed" aria-selected="false">Gagal<span class="n" id="nFailed">0</span></button>
+      </div>
+      <div id="list"></div>
+    </section>
+  </div>
+</div>
+
+<dialog id="settingsDlg">
+  <form class="dlg" method="dialog" id="settingsForm">
+    <h2>Sambung repo GitHub</h2>
+    <p>Papan ini membaca dan menulis giliran post dalam repo anda. Token disimpan dalam pelayar ini sahaja.</p>
+    <div class="field"><label for="owner">Pemilik repo</label><input type="text" id="owner" autocomplete="off" required></div>
+    <div class="field"><label for="repo">Nama repo</label><input type="text" id="repo" autocomplete="off" required></div>
+    <div class="field"><label for="token">Token GitHub</label><input type="password" id="token" autocomplete="off" placeholder="github_pat_..." required></div>
+    <p class="hint">Cipta fine-grained token di GitHub &gt; Settings &gt; Developer settings, hadkan kepada repo ini sahaja, dengan izin Contents dan Actions: Read and write.</p>
+    <p class="hint warn" id="settingsErr" hidden></p>
+    <div class="actions">
+      <button type="button" class="btn quiet danger" id="disconnectBtn">Putuskan sambungan</button>
+      <button type="button" class="btn" id="settingsCloseBtn">Tutup</button>
+      <button type="submit" class="btn primary" id="connectBtn">Sambung</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="confirmDlg">
+  <div class="dlg">
+    <h2 id="confirmTitle">Terbit sekarang?</h2>
+    <p id="confirmBody"></p>
+    <div class="preview" id="confirmPreview"></div>
+    <div class="actions">
+      <button class="btn" id="confirmNo">Batal</button>
+      <button class="btn primary" id="confirmYes">Terbit sekarang</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  'use strict';
+  const SLOTS = ['08:30', '13:00', '21:00'];
+  const LIMIT = 500;
+  const DAYS = ['Ahd', 'Isn', 'Sel', 'Rab', 'Kha', 'Jum', 'Sab'];
+  const MONTHS = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'];
+  const DEFAULTS = { owner: 'syazwan9111', repo: 'innocentrex-threads-poster', branch: 'main' };
+  const QUEUE_PATH = 'queue/posts.json';
+  const WORKFLOW = 'publish.yml';
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- Masa: semuanya dalam waktu Malaysia (+08:00) ----------
+  const MYT = 8 * 3600 * 1000;
+  const pad = (n) => String(n).padStart(2, '0');
+  function parts(ms) {
+    const d = new Date(ms + MYT);
+    return {
+      date: `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`,
+      time: `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`,
+      dow: d.getUTCDay(), day: d.getUTCDate(), month: d.getUTCMonth(),
+    };
+  }
+  const iso = (date, time) => `${date}T${time}:00+08:00`;
+  const today = () => parts(Date.now()).date;
+  function addDays(date, n) { return parts(Date.parse(iso(date, '12:00')) + n * 86400000).date; }
+  function niceDate(date) {
+    const p = parts(Date.parse(iso(date, '12:00')));
+    if (date === today()) return 'Hari ini';
+    if (date === addDays(today(), 1)) return 'Esok';
+    return `${DAYS[p.dow]}, ${p.day} ${MONTHS[p.month]}`;
+  }
+
+  // ---------- Simpanan tempatan (boleh gagal dalam pratonton) ----------
+  const store = {
+    get() { try { return JSON.parse(localStorage.getItem('threadsPoster') || 'null'); } catch { return null; } },
+    set(v) { try { localStorage.setItem('threadsPoster', JSON.stringify(v)); } catch {} },
+    clear() { try { localStorage.removeItem('threadsPoster'); } catch {} },
+  };
+
+  // ---------- Keadaan ----------
+  const state = {
+    cfg: store.get(), demo: true, posts: [], sha: null, raw: null,
+    tab: 'scheduled', editing: null, date: today(), time: null, busy: false, lastRun: null,
+  };
+
+  function demoPosts() {
+    const t = today();
+    return [
+      { id: 'demo-1', status: 'published', created_by: 'claude', publish_at: iso(addDays(t, -1), '21:00'), published_at: iso(addDays(t, -1), '21:00'), permalink: '#',
+        text: 'Starlink Mini 2 dah rasmi 🛰️\n\nDish portable generasi kedua ada bateri quick-swap yang tahan sehingga 4.5 jam sekali cas, boleh plug in guna USB-C, dan Wi-Fi built-in.\n\n#Starlink' },
+      { id: 'demo-2', status: 'scheduled', created_by: 'claude', publish_at: iso(addDays(t, 1), '08:30'),
+        text: 'Lupa password MyDigital ID? Tak perlu daftar semula dah.\n\nApp versi 2.11.0 ada fungsi "Forgot Password": buka menu, pilih Forgot Password, buat face scan, set password baru.\n\n#MyDigitalID #GovTech' },
+      { id: 'demo-3', status: 'scheduled', created_by: 'dashboard', publish_at: iso(addDays(t, 1), '13:00'),
+        text: 'Tip pejabat: semak tarikh luput lesen antivirus sebelum hujung tahun. Banyak agensi terlepas renewal bila bajet baharu belum turun.' },
+      { id: 'demo-4', status: 'failed', created_by: 'dashboard', publish_at: iso(addDays(t, -1), '13:00'), error: 'Token Threads sudah luput. Jana token baharu dan simpan dalam Secrets repo.',
+        text: 'Admin IT, patch Outlook dulu minggu ni ⚠️\n\nPatch Tuesday November tutup CVE-2026-124194, zero-day Microsoft Outlook yang disahkan sudah dieksploit.\n\n#PatchTuesday' },
+    ];
+  }
+
+  // ---------- GitHub API ----------
+  const b64encode = (s) => { const b = new TextEncoder().encode(s); let o = ''; for (const c of b) o += String.fromCharCode(c); return btoa(o); };
+  const b64decode = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g, '')), (c) => c.charCodeAt(0)));
+
+  async function gh(path, opts = {}) {
+    const c = state.cfg;
+    const res = await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}${path}`, {
+      ...opts,
+      headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${c.token}`, 'X-GitHub-Api-Version': '2022-11-28', ...(opts.headers || {}) },
+      cache: 'no-store',
+    });
+    if (res.status === 204) return null;
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const e = new Error(explain(res.status, json.message));
+      e.status = res.status;
+      throw e;
+    }
+    return json;
+  }
+  function explain(status, message) {
+    if (status === 401) return 'Token GitHub tidak sah atau sudah luput. Masukkan token baharu dalam Tetapan.';
+    if (status === 403) return 'Token tidak mempunyai izin yang cukup. Ia perlukan Contents dan Actions: Read and write.';
+    if (status === 404) return 'Repo atau fail giliran tidak dijumpai. Semak nama pemilik dan repo dalam Tetapan.';
+    return message || `GitHub membalas ralat ${status}.`;
+  }
+
+  async function loadQueue() {
+    const c = state.cfg;
+    const f = await gh(`/contents/${QUEUE_PATH}?ref=${encodeURIComponent(c.branch)}`);
+    const data = JSON.parse(b64decode(f.content));
+    state.sha = f.sha;
+    state.raw = data;
+    state.posts = Array.isArray(data.posts) ? data.posts : [];
+  }
+
+  // Ubah giliran: muat versi terkini, guna perubahan, simpan. Ulang jika ada konflik.
+  async function mutate(change, message) {
+    if (state.demo) { change(state.posts); return; }
+    for (let attempt = 0; attempt < 4; attempt++) {
+      await loadQueue();
+      change(state.posts);
+      const body = { ...state.raw, posts: state.posts, updated_at: new Date().toISOString() };
+      try {
+        const out = await gh(`/contents/${QUEUE_PATH}`, {
+          method: 'PUT',
+          body: JSON.stringify({ message, content: b64encode(JSON.stringify(body, null, 2) + '\n'), sha: state.sha, branch: state.cfg.branch }),
+        });
+        state.sha = out.content.sha;
+        state.raw = body;
+        return;
+      } catch (e) {
+        if (e.status !== 409 && e.status !== 422) throw e;
+      }
+    }
+    throw new Error('Giliran sedang dikemas kini oleh proses lain. Cuba lagi sebentar.');
+  }
+
+  async function loadLastRun() {
+    try {
+      const r = await gh(`/actions/workflows/${WORKFLOW}/runs?per_page=1`);
+      state.lastRun = r.workflow_runs && r.workflow_runs[0] ? r.workflow_runs[0] : null;
+    } catch { state.lastRun = null; }
+  }
+
+  // ---------- Paparan ----------
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  let toastTimer;
+  function toast(msg, bad) {
+    const t = $('toast');
+    t.textContent = msg; t.className = 'toast show' + (bad ? ' bad' : '');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.className = 'toast'; }, bad ? 7000 : 4000);
+  }
+
+  function slotPosts(date, time) {
+    return state.posts.filter((p) => { const x = parts(Date.parse(p.publish_at)); return x.date === date && x.time === time && p.status !== 'draft'; });
+  }
+  function worst(posts) {
+    if (posts.some((p) => p.status === 'failed')) return 'failed';
+    if (posts.some((p) => p.status === 'scheduled')) return 'scheduled';
+    if (posts.some((p) => p.status === 'published')) return 'published';
+    return '';
+  }
+
+  function renderRack() {
+    const t = today(); const now = Date.now();
+    let html = '<div></div>';
+    const dates = Array.from({ length: 7 }, (_, i) => addDays(t, i));
+    for (const d of dates) {
+      const p = parts(Date.parse(iso(d, '12:00')));
+      html += `<div class="day${d === t ? ' today' : ''}">${d === t ? 'Hari ini' : DAYS[p.dow]}<b>${p.day}</b></div>`;
+    }
+    for (const s of SLOTS) {
+      html += `<div class="slot-label">${s}</div>`;
+      for (const d of dates) {
+        const ps = slotPosts(d, s); const st = worst(ps);
+        const past = Date.parse(iso(d, s)) < now;
+        const picked = state.date === d && state.time === s;
+        const word = st === 'scheduled' ? 'dijadualkan' : st === 'published' ? 'diterbitkan' : st === 'failed' ? 'gagal' : 'kosong';
+        html += `<button class="port${past ? ' past' : ''}${picked ? ' picked' : ''}" data-date="${d}" data-time="${s}" aria-label="${esc(niceDate(d))} ${s}, ${word}"${picked ? ' aria-current="true"' : ''}>` +
+          (ps.length > 1 ? `<span class="count">${ps.length}</span>` : '') + `<i class="led ${st}"></i></button>`;
+      }
+    }
+    $('rack').innerHTML = html;
+
+    const upcoming = state.posts.filter((p) => p.status === 'scheduled' && Date.parse(p.publish_at) >= now).sort((a, b) => Date.parse(a.publish_at) - Date.parse(b.publish_at))[0];
+    let foot = upcoming ? `Post seterusnya: ${niceDate(parts(Date.parse(upcoming.publish_at)).date).toLowerCase()}, ${parts(Date.parse(upcoming.publish_at)).time}.` : 'Tiada post dijadualkan. Tekan mana-mana port untuk pilih slot.';
+    if (state.lastRun) {
+      const r = state.lastRun; const p = parts(Date.parse(r.updated_at || r.created_at));
+      const ok = r.conclusion === 'success' ? 'berjaya' : r.status !== 'completed' ? 'sedang berjalan' : 'ada ralat';
+      foot += ` Semakan terakhir: ${niceDate(p.date).toLowerCase()} ${p.time}, ${ok}.`;
+    }
+    $('rackFoot').textContent = foot;
+  }
+
+  function renderList() {
+    const now = Date.now();
+    const groups = {
+      scheduled: state.posts.filter((p) => p.status === 'scheduled').sort((a, b) => Date.parse(a.publish_at) - Date.parse(b.publish_at)),
+      published: state.posts.filter((p) => p.status === 'published').sort((a, b) => Date.parse(b.published_at || b.publish_at) - Date.parse(a.published_at || a.publish_at)),
+      failed: state.posts.filter((p) => p.status === 'failed').sort((a, b) => Date.parse(b.publish_at) - Date.parse(a.publish_at)),
+    };
+    $('nScheduled').textContent = groups.scheduled.length;
+    $('nPublished').textContent = groups.published.length;
+    $('nFailed').textContent = groups.failed.length;
+    document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === state.tab)));
+
+    const items = groups[state.tab];
+    if (!items.length) {
+      const empties = {
+        scheduled: ['Tiada post menunggu', 'Tulis post di sebelah dan pilih slot untuk menjadualkannya.'],
+        published: ['Belum ada post diterbitkan', 'Post yang sudah keluar di Threads akan disenaraikan di sini.'],
+        failed: ['Tiada post yang gagal', 'Jika ada post tidak dapat diterbitkan, sebabnya akan ditunjukkan di sini.'],
+      }[state.tab];
+      $('list').innerHTML = `<div class="empty"><b>${empties[0]}</b>${empties[1]}</div>`;
+      return;
+    }
+    $('list').innerHTML = items.map((p) => {
+      const when = parts(Date.parse(state.tab === 'published' ? (p.published_at || p.publish_at) : p.publish_at));
+      const by = p.created_by === 'claude' ? 'Ditulis oleh Claude' : 'Ditulis di papan ini';
+      let row = '';
+      if (p.status === 'scheduled') {
+        row = `<button class="btn quiet" data-act="edit" data-id="${esc(p.id)}">Edit</button><button class="btn quiet danger" data-act="delete" data-id="${esc(p.id)}">Padam</button>`;
+      } else if (p.status === 'published') {
+        row = p.permalink ? `<a class="btn quiet" href="${esc(p.permalink)}" target="_blank" rel="noopener">Lihat di Threads</a>` : '';
+      } else {
+        row = `<button class="btn quiet" data-act="retry" data-id="${esc(p.id)}">Jadualkan semula</button><button class="btn quiet danger" data-act="delete" data-id="${esc(p.id)}">Padam</button>`;
+      }
+      const late = p.status === 'scheduled' && Date.parse(p.publish_at) < now ? '<div class="err" style="color:#8A5A00">Menunggu semakan seterusnya.</div>' : '';
+      return `<article class="post"><div class="t"><b>${when.time}</b><span>${esc(niceDate(when.date))}</span></div><div>` +
+        `<p class="clamp">${esc(p.text)}</p>${p.error ? `<div class="err">${esc(p.error)}</div>` : ''}${late}` +
+        `<div class="row">${row}<span class="by">${by}</span></div></div></article>`;
+    }).join('');
+  }
+
+  function renderComposer() {
+    const len = [...$('text').value].length;
+    const m = $('meter');
+    m.textContent = `${len} / ${LIMIT}`;
+    m.className = len > LIMIT ? 'over' : '';
+    $('meterNote').textContent = len > LIMIT ? `Buang ${len - LIMIT} aksara untuk muat dalam satu post.` : 'Had Threads ialah 500 aksara.';
+    $('date').value = state.date;
+    $('date').min = today();
+    document.querySelectorAll('.chip[data-time]').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.time === state.time)));
+    $('customTime').value = state.time && !SLOTS.includes(state.time) ? state.time : '';
+
+    const hint = $('whenHint');
+    hint.className = 'hint';
+    hint.textContent = 'Post disemak setiap 30 minit, jadi pilih masa pada jam tepat atau setengah jam.';
+    if (state.time) {
+      const others = slotPosts(state.date, state.time).filter((p) => p.id !== state.editing && p.status === 'scheduled');
+      if (Date.parse(iso(state.date, state.time)) < Date.now()) {
+        hint.className = 'hint warn'; hint.textContent = 'Masa ini sudah lepas. Pilih masa akan datang, atau tekan Terbit sekarang.';
+      } else if (others.length) {
+        hint.className = 'hint warn'; hint.textContent = 'Slot ini sudah ada post dijadualkan. Kedua-duanya akan keluar serentak.';
+      } else {
+        hint.textContent = `Akan diterbitkan ${niceDate(state.date).toLowerCase()} pada ${state.time}.`;
+      }
+    }
+    $('composeTitle').textContent = state.editing ? 'Edit post' : 'Tulis post';
+    $('scheduleBtn').textContent = state.editing ? 'Simpan perubahan' : 'Jadualkan post';
+    $('cancelEditBtn').hidden = !state.editing;
+    $('nowBtn').hidden = !!state.editing;
+    $('scheduleBtn').disabled = state.busy;
+    $('nowBtn').disabled = state.busy;
+  }
+
+  function renderHeader() {
+    $('demoNotice').hidden = !state.demo;
+    $('linkDot').className = 'dot ' + (state.demo ? 'demo' : 'on');
+    $('linkText').textContent = state.demo ? 'Mod demo' : `${state.cfg.owner}/${state.cfg.repo}`;
+  }
+  function render() { renderHeader(); renderRack(); renderComposer(); renderList(); }
+
+  // ---------- Tindakan ----------
+  function nextFreeSlot() {
+    const now = Date.now(); const t = today();
+    for (let i = 0; i < 14; i++) {
+      const d = addDays(t, i);
+      for (const s of SLOTS) {
+        if (Date.parse(iso(d, s)) > now && !slotPosts(d, s).some((p) => p.status === 'scheduled')) return { date: d, time: s };
+      }
+    }
+    return { date: t, time: null };
+  }
+  function resetComposer() {
+    state.editing = null; $('text').value = '';
+    const n = nextFreeSlot(); state.date = n.date; state.time = n.time;
+  }
+  const newId = () => `${today()}-${Math.random().toString(36).slice(2, 8)}`;
+
+  function validText() {
+    const text = $('text').value.trim();
+    if (!text) { toast('Tulis teks post dahulu.', true); $('text').focus(); return null; }
+    if ([...text].length > LIMIT) { toast(`Teks melebihi ${LIMIT} aksara.`, true); $('text').focus(); return null; }
+    return text;
+  }
+
+  async function run(fn, done) {
+    if (state.busy) return;
+    state.busy = true; renderComposer();
+    try { await fn(); if (done) toast(done); }
+    catch (e) { toast(e.message || 'Sesuatu tidak kena. Cuba lagi.', true); }
+    finally { state.busy = false; render(); }
+  }
+
+  async function schedule() {
+    const text = validText(); if (!text) return;
+    if (!state.time) { toast('Pilih masa untuk post ini.', true); return; }
+    const at = iso(state.date, state.time);
+    if (Date.parse(at) < Date.now()) { toast('Masa itu sudah lepas. Pilih masa akan datang.', true); return; }
+    const id = state.editing;
+    await run(async () => {
+      await mutate((posts) => {
+        if (id) {
+          const p = posts.find((x) => x.id === id);
+          if (!p || p.status === 'published') throw new Error('Post ini sudah diterbitkan dan tidak boleh diedit.');
+          p.text = text; p.publish_at = at; p.status = 'scheduled'; delete p.error;
+        } else {
+          posts.push({ id: newId(), text, publish_at: at, status: 'scheduled', created_by: 'dashboard', created_at: new Date().toISOString() });
+        }
+      }, id ? 'Edit post' : 'Jadualkan post');
+      state.tab = 'scheduled'; resetComposer();
+    }, id ? 'Perubahan disimpan.' : `Dijadualkan untuk ${niceDate(parts(Date.parse(at)).date).toLowerCase()}, ${parts(Date.parse(at)).time}.`);
+  }
+
+  function askPublishNow() {
+    const text = validText(); if (!text) return;
+    $('confirmBody').textContent = state.demo
+      ? 'Dalam mod demo, post ini hanya ditanda sebagai diterbitkan di skrin ini.'
+      : 'Post ini akan keluar di Threads dalam masa lebih kurang seminit dan tidak boleh ditarik balik dari sini.';
+    $('confirmPreview').textContent = text;
+    $('confirmDlg').showModal();
+  }
+  async function publishNow() {
+    $('confirmDlg').close();
+    const text = validText(); if (!text) return;
+    await run(async () => {
+      const nowIso = (() => { const p = parts(Date.now()); return iso(p.date, p.time); })();
+      await mutate((posts) => {
+        const post = { id: newId(), text, publish_at: nowIso, status: 'scheduled', created_by: 'dashboard', created_at: new Date().toISOString() };
+        if (state.demo) { post.status = 'published'; post.published_at = nowIso; post.permalink = '#'; }
+        posts.push(post);
+      }, 'Terbit sekarang');
+      if (!state.demo) {
+        await gh(`/actions/workflows/${WORKFLOW}/dispatches`, { method: 'POST', body: JSON.stringify({ ref: state.cfg.branch }) });
+      }
+      state.tab = state.demo ? 'published' : 'scheduled'; resetComposer();
+    }, state.demo ? 'Ditanda sebagai diterbitkan (demo).' : 'Dihantar. Tekan Muat semula selepas seminit untuk lihat hasilnya.');
+  }
+
+  function startEdit(id, reschedule) {
+    const p = state.posts.find((x) => x.id === id); if (!p) return;
+    state.editing = id; $('text').value = p.text;
+    if (reschedule) { const n = nextFreeSlot(); state.date = n.date; state.time = n.time; }
+    else { const x = parts(Date.parse(p.publish_at)); state.date = x.date; state.time = x.time; }
+    render(); $('text').focus();
+    $('composeTitle').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+  async function remove(id) {
+    await run(async () => {
+      await mutate((posts) => { const i = posts.findIndex((x) => x.id === id); if (i >= 0) posts.splice(i, 1); }, 'Padam post');
+      if (state.editing === id) resetComposer();
+    }, 'Post dipadam.');
+  }
+
+  async function connect(cfg) {
+    const prev = state.cfg; state.cfg = cfg;
+    try {
+      await loadQueue();
+      state.demo = false; store.set(cfg);
+      loadLastRun().then(render);
+      resetComposer(); render();
+      return null;
+    } catch (e) { state.cfg = prev; return e.message; }
+  }
+  async function refresh() {
+    if (state.demo) { render(); return; }
+    await run(async () => { await loadQueue(); await loadLastRun(); }, 'Dikemas kini.');
+  }
+
+  // ---------- Acara ----------
+  $('text').addEventListener('input', renderComposer);
+  $('date').addEventListener('change', (e) => { if (e.target.value) { state.date = e.target.value; render(); } });
+  $('chips').addEventListener('click', (e) => { const c = e.target.closest('.chip[data-time]'); if (c) { state.time = c.dataset.time; render(); } });
+  $('customTime').addEventListener('change', (e) => { if (e.target.value) { state.time = e.target.value; render(); } });
+  $('rack').addEventListener('click', (e) => {
+    const p = e.target.closest('.port'); if (!p) return;
+    const ps = slotPosts(p.dataset.date, p.dataset.time);
+    const sched = ps.find((x) => x.status === 'scheduled');
+    if (sched && !state.editing && !$('text').value.trim()) { startEdit(sched.id); return; }
+    state.date = p.dataset.date < today() ? today() : p.dataset.date; state.time = p.dataset.time; render();
+  });
+  $('scheduleBtn').addEventListener('click', schedule);
+  $('nowBtn').addEventListener('click', askPublishNow);
+  $('confirmYes').addEventListener('click', publishNow);
+  $('confirmNo').addEventListener('click', () => $('confirmDlg').close());
+  $('cancelEditBtn').addEventListener('click', () => { resetComposer(); render(); });
+  $('refreshBtn').addEventListener('click', refresh);
+  document.querySelector('.tabs').addEventListener('click', (e) => { const t = e.target.closest('.tab'); if (t) { state.tab = t.dataset.tab; renderList(); } });
+  $('list').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    if (b.dataset.act === 'edit') startEdit(b.dataset.id);
+    if (b.dataset.act === 'retry') startEdit(b.dataset.id, true);
+    if (b.dataset.act === 'delete') {
+      if (b.dataset.armed) remove(b.dataset.id);
+      else { b.dataset.armed = '1'; b.textContent = 'Tekan lagi untuk padam'; setTimeout(() => { if (b.isConnected) { delete b.dataset.armed; b.textContent = 'Padam'; } }, 3500); }
+    }
+  });
+
+  function openSettings() {
+    const c = state.cfg || DEFAULTS;
+    $('owner').value = c.owner || DEFAULTS.owner; $('repo').value = c.repo || DEFAULTS.repo; $('token').value = c.token || '';
+    $('settingsErr').hidden = true; $('disconnectBtn').hidden = state.demo;
+    $('settingsDlg').showModal();
+  }
+  $('settingsBtn').addEventListener('click', openSettings);
+  $('demoConnectBtn').addEventListener('click', openSettings);
+  $('settingsCloseBtn').addEventListener('click', () => $('settingsDlg').close());
+  $('disconnectBtn').addEventListener('click', () => {
+    store.clear(); state.cfg = null; state.demo = true; state.posts = demoPosts(); state.lastRun = null;
+    resetComposer(); $('settingsDlg').close(); render(); toast('Sambungan diputuskan. Token dibuang dari pelayar ini.');
+  });
+  $('settingsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('connectBtn'); btn.disabled = true; btn.textContent = 'Menyambung';
+    const err = await connect({ owner: $('owner').value.trim(), repo: $('repo').value.trim(), branch: DEFAULTS.branch, token: $('token').value.trim() });
+    btn.disabled = false; btn.textContent = 'Sambung';
+    if (err) { $('settingsErr').textContent = err; $('settingsErr').hidden = false; }
+    else { $('settingsDlg').close(); toast('Repo disambung.'); }
+  });
+
+  // ---------- Mula ----------
+  (async () => {
+    state.posts = demoPosts(); resetComposer(); render();
+    if (state.cfg && state.cfg.token) {
+      const err = await connect(state.cfg);
+      if (err) toast(err, true);
+    }
+  })();
+})();
+</script>
+</body>
+</html>
