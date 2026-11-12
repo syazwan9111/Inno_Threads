@@ -6,7 +6,7 @@
       "id": "2026-11-12-o98o01",
       "text": "test",
       "publish_at": "2026-11-12T22:33:00+08:00",
-      "status": "failed",
+      "status": "scheduled",
       "created_by": "dashboard",
       "created_at": "2026-11-12T14:33:31.535Z",
       "error": "Unsupported post request. Object with ID '4693376804314664' does not exist, cannot be loaded due to missing permissions, or does not support this operation"
