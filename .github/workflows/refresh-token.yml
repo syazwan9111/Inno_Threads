@@ -1,0 +1,44 @@
+name: Perbaharui token Threads
+
+# Token long-lived Threads sah 60 hari. Workflow ini memperbaharuinya setiap minggu
+# dan menyimpan token baharu ke dalam Secrets repo.
+# Perlu secret ADMIN_TOKEN: fine-grained PAT untuk repo ini dengan izin "Secrets: Read and write".
+# Tanpa ADMIN_TOKEN, workflow ini hanya memberi amaran dan token perlu dijana semula secara manual.
+
+on:
+  schedule:
+    - cron: '17 2 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Perbaharui dan simpan token
+        env:
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+        run: |
+          if [ -z "$THREADS_ACCESS_TOKEN" ]; then
+            echo "::error::THREADS_ACCESS_TOKEN belum ditetapkan."
+            exit 1
+          fi
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::warning::ADMIN_TOKEN tiada. Token tidak diperbaharui secara automatik; jana semula sebelum 60 hari."
+            exit 0
+          fi
+          RESPONSE=$(curl -sS --get "https://graph.threads.net/refresh_access_token" \
+            --data-urlencode "grant_type=th_refresh_token" \
+            --data-urlencode "access_token=${THREADS_ACCESS_TOKEN}")
+          NEW_TOKEN=$(echo "$RESPONSE" | jq -r '.access_token // empty')
+          if [ -z "$NEW_TOKEN" ]; then
+            echo "::error::Gagal memperbaharui token: $(echo "$RESPONSE" | jq -r '.error.message // "ralat tidak diketahui"')"
+            exit 1
+          fi
+          echo "::add-mask::$NEW_TOKEN"
+          echo "$NEW_TOKEN" | gh secret set THREADS_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY"
+          echo "Token diperbaharui. Sah $(echo "$RESPONSE" | jq -r '.expires_in / 86400 | floor') hari lagi."
