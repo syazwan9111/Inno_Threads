@@ -6,7 +6,7 @@
       "id": "2026-11-12-o98o01",
       "text": "test",
       "publish_at": "2026-11-12T22:33:00+08:00",
-      "status": "failed",
+      "status": "scheduled",
       "created_by": "dashboard",
       "created_at": "2026-11-12T14:33:31.535Z",
       "error": "API access blocked."
