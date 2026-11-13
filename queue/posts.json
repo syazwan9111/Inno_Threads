@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-11-13T02:47:56.126Z",
+  "updated_at": "2026-11-13T02:48:10.265Z",
   "posts": [
     {
       "id": "2026-11-12-o98o01",
@@ -15,9 +15,10 @@
       "id": "2026-11-13-wkv2o3",
       "text": "Bila kali terakhir restart Chrome di PC pejabat? 🔄\n\nGoogle keluarkan Chrome 157.0.8103.78/.79 untuk Windows dan Mac (.78 untuk Linux) pada 11 Nov, dengan 83 security fixes, ada yang bertaraf Critical.\n\nUpdate hanya aktif selepas relaunch. Buka Settings > About Chrome, semak versi, tekan Relaunch.\n\nhttps://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01744469280.html\n\n#Chrome #CyberSecurity",
       "publish_at": "2026-11-13T10:47:00+08:00",
-      "status": "scheduled",
+      "status": "failed",
       "created_by": "dashboard",
-      "created_at": "2026-11-13T02:47:56.126Z"
+      "created_at": "2026-11-13T02:47:56.126Z",
+      "error": "API access blocked."
     }
   ]
 }
